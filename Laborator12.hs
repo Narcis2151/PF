@@ -53,3 +53,9 @@ instance Foldable GoatLord where
     foldMap f NoGoat = mempty 
     foldMap f (OneGoat a) = f a
     foldMap f (MoreGoats a b c) = foldMap f a <> foldMap f b  <> foldMap f c
+
+--instance F.Foldable Tree where  
+    --foldMap f Empty = mempty  
+    --foldMap f (Node x l r) = F.foldMap f l `mappend`  
+                             --f x           `mappend`  
+                             --F.foldMap f r  

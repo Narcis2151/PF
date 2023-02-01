@@ -39,8 +39,33 @@ cowFromString n a w = if noEmpty n == Just n && noNegative a == Just a && noNega
 test24 = cowFromString "Milka" 5 100 == Just (Cow {name = "Milka", age = 5, weight = 100})
 
 cowFromString2 :: String -> Int -> Int -> Maybe Cow
-cowFromString2 n a w = if Just n == (++) <$> pure "" <*> noEmpty n && Just a == (+) <$> pure 0 <*> noNegative a && Just w == (+) <$> pure 0 <*> noNegative w then 
-                        Just Cow{name = n, age = a, weight = w}
-                        else Nothing
+cowFromString2 s x y = (fmap Cow (noEmpty s)) <*> (noNegative x) <*> (noNegative y)
 
+newtype Name = Name String
+    deriving (Eq, Show)
+newtype Address = Address String
+    deriving (Eq, Show)
+data Person = Person Name Address
+    deriving (Eq, Show)
+
+validateLength :: Int -> String -> Maybe String 
+validateLength n s = if length s <= n then Just s else Nothing
+
+mkName :: String -> Maybe Name
+mkName s 
+    | validateLength 25 s /= Nothing = Just (Name s)
+    | otherwise = Nothing
+
+mkAddress :: String -> Maybe Address
+mkAddress s
+    | validateLength 100 s /= Nothing = Just (Address s)
+    | otherwise = Nothing
+
+mkPerson1 :: String -> String -> Maybe Person
+mkPerson1 s1 s2
+    | mkName s1 == Nothing || mkAddress s2 == Nothing = Nothing
+    | otherwise = Just (Person (Name s1) (Address s2))
+
+mkPerson2 :: String -> String -> Maybe Person
+mkPerson2 s1 s2 = fmap Person (mkName s1) <*> mkAddress s2
                         
